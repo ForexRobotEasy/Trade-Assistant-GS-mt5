@@ -1,0 +1,73 @@
+mql5
+#property copyright 'Forex Robot Easy Team'
+#property link      'forexroboteasy.com'
+
+// Indicator inputs
+input int period = 14;
+input int maMethod = MODE_SMA;
+input int appliedPrice = PRICE_CLOSE;
+
+// Main trend analysis function
+bool AnalyzeTrend()
+{
+   double mainTrend = iCustom(NULL, 0, 'Gold Stuff', period, maMethod, appliedPrice, 0);
+   
+   // Check if main trend is bullish
+   if(mainTrend > 0)
+   {
+      // Place buy order
+      OrderSend(Symbol(), OP_BUY, 0.01, Ask, 0, 0, 0, 'Buy Order', MagicNumber, 0, Green);
+   }
+   
+   // Check if main trend is bearish
+   else if(mainTrend < 0)
+   {
+      // Place sell order
+      OrderSend(Symbol(), OP_SELL, 0.01, Bid, 0, 0, 0, 'Sell Order', MagicNumber, 0, Red);
+   }
+   
+   // If main trend is not determined, do nothing
+   else
+   {
+      return false;
+   }
+   
+   return true;
+}
+
+// Order placement function
+void PlaceOrder(double lotSize, int orderType)
+{
+   // Check if order type is buy
+   if(orderType == OP_BUY)
+   {
+      // Place buy order
+      OrderSend(Symbol(), OP_BUY, lotSize, Ask, 0, 0, 0, 'Buy Order', MagicNumber, 0, Green);
+   }
+   
+   // Check if order type is sell
+   else if(orderType == OP_SELL)
+   {
+      // Place sell order
+      OrderSend(Symbol(), OP_SELL, lotSize, Bid, 0, 0, 0, 'Sell Order', MagicNumber, 0, Red);
+   }
+}
+
+// Main program
+void OnStart()
+{
+   // Analyze trend
+   bool trendAnalysisResult = AnalyzeTrend();
+   
+   // If trend analysis is successful, place order
+   if(trendAnalysisResult)
+   {
+      // Place order with lot size of 0.01 and buy order type
+      PlaceOrder(0.01, OP_BUY);
+   }
+   else
+   {
+      // Place order with lot size of 0.01 and sell order type
+      PlaceOrder(0.01, OP_SELL);
+   }
+}
